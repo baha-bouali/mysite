@@ -4,10 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mysite"
-requires-python = ">=3.12"
+description = "My first ever website"
+requires-python = ">=3.11"
 version = "0.0.1"
 dependencies = [
     "fastapi",
+    "motor",
 ]
 [tool.setuptools.packages.find]
 where = ["src"]
