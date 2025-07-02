@@ -3,9 +3,10 @@ from uuid import UUID, uuid4
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseModel, Field
+
 
 MONGODB_CONNECTION_STRING = os.environ["MONGODB_CONNECTION_STRING"]
 
@@ -24,8 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-class TodoItem(BaseModel):
+class TodoItem (BaseModel):
     id: UUID = Field(default_factory=uuid4, alias="_id")
     content: str
 
@@ -45,14 +45,12 @@ async def create_todo(item: TodoItemCreate):
 async def read_todos():
     return await todos.find().to_list(length=None)
 
-
 @app.delete("/todos/{todo_id}")
 async def delete_todo(todo_id: UUID):
     delete_result = await todos.delete_one({"_id": todo_id})
     if delete_result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Todo not found")
     return {"message": "Todo deleted successfully"}
-
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
