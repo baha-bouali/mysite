@@ -9,6 +9,8 @@ services:
       target: runner
     ports:
       - 8000:8000
+    env_file:
+      - ./backend/.env
   
   frontend:
     image: mysite-frontend
@@ -21,12 +23,19 @@ services:
       - 80:80
   
   mongodb:
-    image: mongo:7.0.12
+    image: mongo:8.0.11
     container_name: mysite-mongodb
     volumes:
       - mongodb-data:/data/db
     env_file:
       - ./mongodb/.env
 
+  mongo-express:
+    image: mongo-express:1.0.2
+    ports:
+      - 8081:8081
+    container_name: mysite-mongo-express
+    env_file:
+    - ./mongo-express/.env
 volumes:
   mongodb-data: 
